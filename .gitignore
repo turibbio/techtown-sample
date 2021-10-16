@@ -37,7 +37,7 @@ _deps
 
 # CMake generated folder and files
 build
-output
+build-output
 src/include/config.h
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,visualstudiocode
