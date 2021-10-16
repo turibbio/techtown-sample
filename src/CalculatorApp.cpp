@@ -1,10 +1,10 @@
 #include <iostream>
-#include "Calculator.h"
-#include "Version.h"
+#include "include/Calculator.h"
+#include "include/config.h"
 
 using namespace std;
 
-int main()
+int main(int, char**)
 {
 	double x = 0.0;
 	double y = 0.0;
@@ -12,7 +12,7 @@ int main()
 	char oper = '+';
 
 	cout << "Calculator Console Application" << endl;
-	cout << "Version Number: " << VER_FILE_VERSION_STR << endl;
+	cout << "Version Number: " << PROJECT_VER << endl;
 
 	Calculator c;
 
