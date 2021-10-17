@@ -1,10 +1,8 @@
 name: Release Dev Environment
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    types: [labeled]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -12,7 +10,7 @@ env:
 
 jobs:
   build-and-deploy-dev:
-    #if: github.event.label.name == 'dev-provisioning'
+    if: github.event.label.name == 'dev-provisioning'
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +31,7 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.9
       
     - name: Replace Version
-      run: sed -i 's/project(CalculatorApp VERSION 0.0.0)/project(CalculatorApp VERSION ${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}.${{ steps.gitversion.outputs.patch }}${{ steps.gitversion.outputs.PreReleaseTagWithDash }})/g' ${{github.workspace}}/src/CMakeLists.txt
+      run: sed -i 's/project(CalculatorApp VERSION 0.0.0)/project(CalculatorApp VERSION ${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}.${{ steps.gitversion.outputs.patch }})/g' ${{github.workspace}}/src/CMakeLists.txt
       
     - name: Show replacement
       run: cat ${{github.workspace}}/src/CMakeLists.txt
