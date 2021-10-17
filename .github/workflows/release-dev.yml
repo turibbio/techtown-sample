@@ -51,9 +51,9 @@ jobs:
     - name: Copy to Dev Device
       uses: appleboy/scp-action@v0.1.1
       with:
-        host: 104.40.146.35
-        username: dev
-        port: 22
+        host: ${{ secrets.DEV_HOST }}
+        username: ${{ secrets.DEV_USER }}
+        port: ${{ secrets.DEV_PORT }}
         key: ${{ secrets.DEV_KEY }}
         source: "${{github.workspace}}/build-output/CalculatorApp"
         target: "apps"
