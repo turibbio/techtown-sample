@@ -65,20 +65,17 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: CalculatorApp
-        
-    - name: Display structure of downloaded files
-      run: ls -lista
       
-#    - name: Copy to Dev Device
-#      uses: appleboy/scp-action@v0.1.1
-#      with:
-#        host: ${{ secrets.QA_HOST }}
-#        username: ${{ secrets.QA_USER }}
-#        port: ${{ secrets.QA_PORT }}
-#        key: ${{ secrets.QA_KEY }}
-#        source: "${{github.workspace}}/build-output/CalculatorApp"
-#        target: "apps"
-#        strip_components: 3
+    - name: Copy to QA Device
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.QA_HOST }}
+        username: ${{ secrets.QA_USER }}
+        port: ${{ secrets.QA_PORT }}
+        key: ${{ secrets.QA_KEY }}
+        source: "CalculatorApp"
+        target: "apps"
+        strip_components: 3
 
   deploy-to-prod:
     needs: [build-and-test, deploy-to-qa]
@@ -89,9 +86,6 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: CalculatorApp
-    
-    - name: Display structure of downloaded files
-      run: ls -R
         
     - name: Copy to Prod Devices
       uses: appleboy/scp-action@v0.1.1
@@ -100,6 +94,6 @@ jobs:
         username: ${{ secrets.PROD_USER }}
         port: ${{ secrets.PROD_PORT }}
         key: ${{ secrets.PROD_KEY }}
-        source: "${{github.workspace}}/build-output/CalculatorApp"
+        source: "CalculatorApp"
         target: "apps"
-        strip_components: 3
+        strip_components: 1
