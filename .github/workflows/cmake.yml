@@ -20,6 +20,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     
     - name: Install Google Test suite
       run: sudo apt-get install googletest libgtest-dev
