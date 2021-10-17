@@ -75,6 +75,7 @@ jobs:
         key: ${{ secrets.QA_KEY }}
         source: "${{github.workspace}}/CalculatorApp"
         target: "apps"
+        strip_components: 3
 
   deploy-to-prod:
     needs: [build-and-test, deploy-to-qa]
@@ -95,3 +96,4 @@ jobs:
         key: ${{ secrets.PROD_KEY }}
         source: "${{github.workspace}}/CalculatorApp"
         target: "apps"
+        strip_components: 3
