@@ -67,18 +67,18 @@ jobs:
         name: CalculatorApp
         
     - name: Display structure of downloaded files
-      run: ls -R
+      run: ls -lista
       
-    - name: Copy to Dev Device
-      uses: appleboy/scp-action@v0.1.1
-      with:
-        host: ${{ secrets.QA_HOST }}
-        username: ${{ secrets.QA_USER }}
-        port: ${{ secrets.QA_PORT }}
-        key: ${{ secrets.QA_KEY }}
-        source: "${{github.workspace}}/build-output/CalculatorApp"
-        target: "apps"
-        strip_components: 3
+#    - name: Copy to Dev Device
+#      uses: appleboy/scp-action@v0.1.1
+#      with:
+#        host: ${{ secrets.QA_HOST }}
+#        username: ${{ secrets.QA_USER }}
+#        port: ${{ secrets.QA_PORT }}
+#        key: ${{ secrets.QA_KEY }}
+#        source: "${{github.workspace}}/build-output/CalculatorApp"
+#        target: "apps"
+#        strip_components: 3
 
   deploy-to-prod:
     needs: [build-and-test, deploy-to-qa]
