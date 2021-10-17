@@ -1,0 +1,56 @@
+name: Release Prem Environment
+
+on: workflow_dispatch
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build-and-deploy-dev:
+    if: github.event.label.name == 'dev-provisioning'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Install Google Test suite
+      run: sudo apt-get install googletest libgtest-dev
+      
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.9
+      with:
+        versionSpec: '5.x'
+          
+    - name: Determine Version
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.9
+      
+    - name: Replace Version
+      run: sed -i 's/project(CalculatorApp VERSION 0.0.0)/project(CalculatorApp VERSION ${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}.${{ steps.gitversion.outputs.patch }})/g' ${{github.workspace}}/src/CMakeLists.txt
+      
+    - name: Show replacement
+      run: cat ${{github.workspace}}/src/CMakeLists.txt
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build/test
+      run: ctest --verbose -C ${{env.BUILD_TYPE}}
+      
+    - name: Copy to Dev Device
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.ONPREM_HOST }}
+        username: ${{ secrets.ONPREM_USER }}
+        port: ${{ secrets.ONPREM_PORT }}
+        key: ${{ secrets.ONPREM_KEY }}
+        source: "${{github.workspace}}/build-output/CalculatorApp"
+        target: "apps"
+        strip_components: 3
