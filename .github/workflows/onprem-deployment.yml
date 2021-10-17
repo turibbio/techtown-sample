@@ -8,7 +8,6 @@ env:
 
 jobs:
   build-and-deploy-dev:
-    if: github.event.label.name == 'dev-provisioning'
     runs-on: ubuntu-latest
 
     steps:
