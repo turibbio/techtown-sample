@@ -1,16 +1,16 @@
-name: Release
+name: Release Dev Environment
 
 on:
-  release:
-    types:
-    - created
-    
+  pull_request:
+    types: [labeled]
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  build-and-test:
+  build-and-deploy-dev:
+    if: github.event.label.name == 'dev-provisioning'
     runs-on: ubuntu-latest
 
     steps:
@@ -46,49 +46,13 @@ jobs:
       working-directory: ${{github.workspace}}/build/test
       run: ctest --verbose -C ${{env.BUILD_TYPE}}
       
-    - uses: actions/upload-artifact@v2
-      with:
-        name: CalculatorApp
-        path: ${{github.workspace}}/build-output/*
-
-  deploy-to-qa:
-    needs: [build-and-test]
-    runs-on: ubuntu-latest
-    environment: 
-      name: QA
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: CalculatorApp
-      
-    - name: Copy to QA Device
+    - name: Copy to Dev Device
       uses: appleboy/scp-action@v0.1.1
       with:
-        host: ${{ secrets.QA_HOST }}
-        username: ${{ secrets.QA_USER }}
-        port: ${{ secrets.QA_PORT }}
-        key: ${{ secrets.QA_KEY }}
-        source: "${{github.workspace}}/*"
+        host: ${{ secrets.DEV_HOST }}
+        username: ${{ secrets.DEV_USER }}
+        port: ${{ secrets.DEV_PORT }}
+        key: ${{ secrets.DEV_KEY }}
+        source: "${{github.workspace}}/build-output/CalculatorApp"
         target: "apps"
-        strip_components: 2
-
-  deploy-to-prod:
-    needs: [build-and-test, deploy-to-qa]
-    runs-on: ubuntu-latest
-    environment: 
-      name: PRODUCTION
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: CalculatorApp
-        
-    - name: Copy to Prod Devices
-      uses: appleboy/scp-action@v0.1.1
-      with:
-        host: ${{ secrets.PROD_HOST }}
-        username: ${{ secrets.PROD_USER }}
-        port: ${{ secrets.PROD_PORT }}
-        key: ${{ secrets.PROD_KEY }}
-        source: "${{github.workspace}}/*"
-        target: "apps"
-        strip_components: 2
+        strip_components: 3
