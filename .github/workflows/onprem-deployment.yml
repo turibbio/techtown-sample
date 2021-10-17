@@ -7,7 +7,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build-and-deploy-dev:
+  build-and-deploy-onprem:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +43,7 @@ jobs:
       working-directory: ${{github.workspace}}/build/test
       run: ctest --verbose -C ${{env.BUILD_TYPE}}
       
-    - name: Copy to Dev Device
+    - name: Copy to OnPrem Device
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.ONPREM_HOST }}
