@@ -73,8 +73,9 @@ jobs:
         username: ${{ secrets.QA_USER }}
         port: ${{ secrets.QA_PORT }}
         key: ${{ secrets.QA_KEY }}
-        source: "${{github.workspace}}/CalculatorApp"
+        source: "${{github.workspace}}/*"
         target: "apps"
+        strip_components: 2
 
   deploy-to-prod:
     needs: [build-and-test, deploy-to-qa]
@@ -93,6 +94,6 @@ jobs:
         username: ${{ secrets.PROD_USER }}
         port: ${{ secrets.PROD_PORT }}
         key: ${{ secrets.PROD_KEY }}
-        source: "${{github.workspace}}/CalculatorApp"
+        source: "${{github.workspace}}/*"
         target: "apps"
-        strip_components: 3
+        strip_components: 2
