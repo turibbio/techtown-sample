@@ -1,8 +1,9 @@
 name: Release Dev Environment
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    types: [labeled]
     branches: [ main ]
 
 env:
