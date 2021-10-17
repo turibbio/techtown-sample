@@ -3,6 +3,8 @@ name: Release Dev Environment
 on:
   pull_request:
     types: [labeled]
+    branches:
+      - main
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -45,8 +47,20 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build/test
       run: ctest --verbose -C ${{env.BUILD_TYPE}}
+      
+    - name: Copy
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: 104.40.146.35
+        username: dev
+        port: 22
+        key: ${{ secrets.DEV_KEY }}
+        source: "${{github.workspace}}/build-output/CalculatorApp"
+        target: "apps"
 
-  deploy-dev:
-    needs: build
-    steps:
-      - run: ./test_server.sh
+#  deploy-dev:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Copy
+#      uses: appleboy/scp-action@v0.1.1
