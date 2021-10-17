@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    if: github.event.label.name == 'dev-provisioning'
+    #if: github.event.label.name == 'dev-provisioning'
     runs-on: ubuntu-latest
 
     steps:
